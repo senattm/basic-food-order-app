@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yemek Sepeti</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-pastel-bg text-text-dark">
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="title">Yemek Sepeti</h1>
+      <button id="checkout-button-header" class="btn btn-mint" onclick="showCheckoutScreen()">
+        <span id="cart-item-count" style="margin-right:.5rem;font-weight:bold;">0</span> Ürün Sepette
+      </button>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <div id="last-order-hint" class="last-order-hint" style="display:none;"></div>
+
+    <section id="menu-section" class="menu-section">
+      <h2 class="section-title">Menü</h2>
+      <div id="menu-items-container" class="grid-container"></div>
+
+      <div class="local-storage-box">
+        <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:.5rem;">Adres Kaydet</h3>
+
+        <label for="address-title-input" class="input-label">Adres Başlığı (Ev/İş/Diğer):</label>
+        <input type="text" id="address-title-input" class="input-text" placeholder="Örn: Ev Adresim" style="margin-bottom:.5rem;">
+
+        <label for="street-address-input" class="input-label">Cadde, Sokak, Bina No, Daire No:</label>
+        <input type="text" id="street-address-input" class="input-text" placeholder="Örn: x Sokak, No: 1/A, Daire: 5" style="margin-bottom:.5rem;">
+
+        <label for="city-input" class="input-label">İlçe / Şehir:</label>
+        <input type="text" id="city-input" class="input-text" placeholder="Örn: Kadıköy / İstanbul" style="margin-bottom:1rem;">
+
+        <button onclick="saveAddress()" class="btn btn-mint" style="width:100%;margin-bottom:.5rem;">Kaydet</button>
+        <p id="current-user-info" style="margin-top:.5rem;font-size:.875rem;font-weight:500;">Mevcut Kayıt:</p>
+      </div>
+    </section>
+
+    <aside id="cart-summary" class="cart-summary card">
+      <h2 style="font-size:1.5rem;font-weight:600;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #E5E7EB;">Sepet</h2>
+      <ul id="cart-list" class="cart-list" style="list-style:none;padding:0;"></ul>
+      <div id="cart-empty-message" class="cart-empty" style="display:none;">Sepetiniz boş, bir şeyler ekleyin.</div>
+
+      <div class="totals-section">
+        <div class="total-row"><span>Ara Toplam:</span><span id="subtotal">0.00 ₺</span></div>
+        <div class="total-row"><span>Teslimat Ücreti:</span><span id="delivery-fee">45.00 ₺</span></div>
+        <div class="total-row total-row-final">
+          <span>Genel Toplam:</span><span id="total-amount" class="total-amount-final">45.00 ₺</span>
+        </div>
+      </div>
+
+      <button id="checkout-button" class="btn btn-lavender btn-checkout" onclick="showCheckoutScreen()">Ödemeye Geç</button>
+    </aside>
+
+    <section id="checkout-screen" class="checkout-screen">
+      <div class="checkout-box">
+        <h2 class="checkout-title">Ödeme ve Onay</h2>
+
+        <div class="checkout-info-box">
+          <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:.75rem;">Teslimat Adresi</h3>
+          <div id="checkout-user-display" style="margin-bottom:.75rem;"></div>
+          <label for="checkout-address" class="form-label">Teslimat Adresi (Düzenleyebilirsiniz):</label>
+          <input type="text" id="checkout-address" class="form-input" placeholder="Tam adresinizi girin">
+        </div>
+
+        <div class="checkout-summary-box card" style="padding:1rem;margin-bottom:1.5rem;">
+          <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:.75rem;">Sipariş Özeti</h3>
+          <div style="font-size:.875rem;display:flex;flex-direction:column;gap:.25rem;">
+            <div style="display:flex;justify-content:space-between;"><span>Ara Toplam:</span><span id="checkout-subtotal">0.00 ₺</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Teslimat:</span><span id="checkout-delivery">45.00 ₺</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.125rem;padding-top:.25rem;border-top:1px solid #9CA3AF;margin-top:.25rem;">
+              <span>Ödenecek Tutar:</span><span id="checkout-total-amount" class="total-amount-final">0.00 ₺</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="simulatePayment()" class="btn btn-mint" style="width:100%;padding:.75rem 1rem;font-weight:bold;box-shadow:0 4px 6px -1px rgba(0,0,0,.1);">
+          Siparişi Onayla ve Öde
+        </button>
+        <button onclick="hideCheckoutScreen()" class="btn-back">Vazgeç</button>
+      </div>
+    </section>
+
+    <div id="success-modal" class="success-modal">
+      <div class="success-content">
+        <svg xmlns="http://www.w3.org/2000/svg" class="success-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <h3 class="success-title">Siparişiniz Alındı!</h3>
+        <p class="success-message">Siparişiniz hazırlanıyor. Gelişmeleri takip edebilirsiniz.</p>
+        <button onclick="closeSuccessModal()" class="btn btn-lavender btn-confirm">Tamam</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
