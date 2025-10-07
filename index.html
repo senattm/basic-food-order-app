@@ -1,102 +1,233 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Yemek Sepeti</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-pastel-bg text-text-dark">
-  <header class="header">
-    <div class="container header-content">
-      <h1 class="title">Yemek Sepeti</h1>
-      <button id="checkout-button-header" class="btn btn-mint" onclick="showCheckoutScreen()">
-        <span id="cart-item-count" style="margin-right:.5rem;font-weight:bold;">0</span> Ürün Sepette
-      </button>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yemek Sepeti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body class="bg-light text-dark">
 
-  <main class="container main-content">
-    <div id="last-order-hint" class="last-order-hint" style="display:none;"></div>
-
-    <section id="menu-section" class="menu-section">
-      <h2 class="section-title">Menü</h2>
-      <div id="menu-items-container" class="grid-container"></div>
-
-      <div class="local-storage-box">
-        <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:.5rem;">Adres Kaydet</h3>
-
-        <label for="address-title-input" class="input-label">Adres Başlığı (Ev/İş/Diğer):</label>
-        <input type="text" id="address-title-input" class="input-text" placeholder="Örn: Ev Adresim" style="margin-bottom:.5rem;">
-
-        <label for="street-address-input" class="input-label">Cadde, Sokak, Bina No, Daire No:</label>
-        <input type="text" id="street-address-input" class="input-text" placeholder="Örn: x Sokak, No: 1/A, Daire: 5" style="margin-bottom:.5rem;">
-
-        <label for="city-input" class="input-label">İlçe / Şehir:</label>
-        <input type="text" id="city-input" class="input-text" placeholder="Örn: Kadıköy / İstanbul" style="margin-bottom:1rem;">
-
-        <button onclick="saveAddress()" class="btn btn-mint" style="width:100%;margin-bottom:.5rem;">Kaydet</button>
-        <p id="current-user-info" style="margin-top:.5rem;font-size:.875rem;font-weight:500;">Mevcut Kayıt:</p>
+    <header class="bg-white border-bottom position-sticky top-0 z-3">
+      <div class="container d-flex align-items-center justify-content-between py-2">
+        <h1 class="h3 fw-bold m-0 text-gradient">Yemek Sepeti</h1>
+        <button id="cart-button" class="btn position-relative rounded-circle shadow-sm" onclick="showCheckoutScreen()">
+          <i class="bi bi-basket3 fs-5 text-primary"></i>
+          <span id="cart-item-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+        </button>
       </div>
-    </section>
+    </header>
 
-    <aside id="cart-summary" class="cart-summary card">
-      <h2 style="font-size:1.5rem;font-weight:600;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #E5E7EB;">Sepet</h2>
-      <ul id="cart-list" class="cart-list" style="list-style:none;padding:0;"></ul>
-      <div id="cart-empty-message" class="cart-empty" style="display:none;">Sepetiniz boş, bir şeyler ekleyin.</div>
-
-      <div class="totals-section">
-        <div class="total-row"><span>Ara Toplam:</span><span id="subtotal">0.00 ₺</span></div>
-        <div class="total-row"><span>Teslimat Ücreti:</span><span id="delivery-fee">45.00 ₺</span></div>
-        <div class="total-row total-row-final">
-          <span>Genel Toplam:</span><span id="total-amount" class="total-amount-final">45.00 ₺</span>
-        </div>
-      </div>
-
-      <button id="checkout-button" class="btn btn-lavender btn-checkout" onclick="showCheckoutScreen()">Ödemeye Geç</button>
-    </aside>
-
-    <section id="checkout-screen" class="checkout-screen">
-      <div class="checkout-box">
-        <h2 class="checkout-title">Ödeme ve Onay</h2>
-
-        <div class="checkout-info-box">
-          <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:.75rem;">Teslimat Adresi</h3>
-          <div id="checkout-user-display" style="margin-bottom:.75rem;"></div>
-          <label for="checkout-address" class="form-label">Teslimat Adresi (Düzenleyebilirsiniz):</label>
-          <input type="text" id="checkout-address" class="form-input" placeholder="Tam adresinizi girin">
-        </div>
-
-        <div class="checkout-summary-box card" style="padding:1rem;margin-bottom:1.5rem;">
-          <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:.75rem;">Sipariş Özeti</h3>
-          <div style="font-size:.875rem;display:flex;flex-direction:column;gap:.25rem;">
-            <div style="display:flex;justify-content:space-between;"><span>Ara Toplam:</span><span id="checkout-subtotal">0.00 ₺</span></div>
-            <div style="display:flex;justify-content:space-between;"><span>Teslimat:</span><span id="checkout-delivery">45.00 ₺</span></div>
-            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.125rem;padding-top:.25rem;border-top:1px solid #9CA3AF;margin-top:.25rem;">
-              <span>Ödenecek Tutar:</span><span id="checkout-total-amount" class="total-amount-final">0.00 ₺</span>
-            </div>
+    <section class="gradient-hero">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-12 col-lg-6">
+            <h2 class="display-6 fw-bold mb-2">Lezzet kapında 🍔🍕</h2>
+            <p class="lead text-secondary mb-3">Canın ne çekiyorsa sepete ekle, adresini kaydet, tek tıkla ödeme adımına geç.</p>
+            <a href="#menu-section" class="btn btn-dark btn-lg">Menüyü Gör</a>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="hero-img shadow-lg rounded-4"></div>
           </div>
         </div>
-
-        <button onclick="simulatePayment()" class="btn btn-mint" style="width:100%;padding:.75rem 1rem;font-weight:bold;box-shadow:0 4px 6px -1px rgba(0,0,0,.1);">
-          Siparişi Onayla ve Öde
-        </button>
-        <button onclick="hideCheckoutScreen()" class="btn-back">Vazgeç</button>
       </div>
     </section>
 
-    <div id="success-modal" class="success-modal">
-      <div class="success-content">
-        <svg xmlns="http://www.w3.org/2000/svg" class="success-icon" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-        </svg>
-        <h3 class="success-title">Siparişiniz Alındı!</h3>
-        <p class="success-message">Siparişiniz hazırlanıyor. Gelişmeleri takip edebilirsiniz.</p>
-        <button onclick="closeSuccessModal()" class="btn btn-lavender btn-confirm">Tamam</button>
+    <main class="container my-4">
+      <div class="row g-4">
+        <section id="menu-section" class="col-12 col-lg-8">
+          <h2 class="h4 fw-bold pb-2 border-bottom d-flex align-items-center gap-2">
+            <i class="bi bi-basket2-fill"></i> Menü
+          </h2>
+
+          <div id="menu-items-container" class="row row-cols-1 row-cols-md-2 g-4"></div>
+
+          <div class="mt-4 p-3 border rounded bg-white shadow-sm">
+            <h3 class="h5 fw-semibold mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-geo-alt-fill text-danger"></i> Adres Kaydet
+            </h3>
+
+            <div id="address-alert-area"></div>
+
+            <div class="mb-2">
+              <label for="address-title-input" class="form-label">Adres Başlığı (Ev/İş/Diğer):</label>
+              <input type="text" id="address-title-input" class="form-control" placeholder="Örn: Ev Adresim"/>
+            </div>
+            <div class="mb-2">
+              <label for="street-address-input" class="form-label">Cadde, Sokak, Bina No, Daire No:</label>
+              <input type="text" id="street-address-input" class="form-control" placeholder="Örn: X Sokak, No: 1/A, Daire: 5"/>
+            </div>
+            <div class="mb-3">
+              <label for="city-input" class="form-label">İlçe / Şehir:</label>
+              <input type="text" id="city-input" class="form-control" placeholder="Örn: Kadıköy / İstanbul"/>
+            </div>
+            <button onclick="saveAddress()" class="btn btn-success w-100 mb-2 fw-semibold">Kaydet</button>
+            <p id="current-user-info" class="mb-0 small fw-semibold text-secondary">Mevcut Kayıt:</p>
+          </div>
+        </section>
+
+        <aside id="cart-summary" class="col-12 col-lg-4">
+          <div class="card shadow-sm sticky-lg-top sticky-offset">
+            <div class="card-body">
+              <h2 class="h5 fw-bold pb-2 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-cart-check-fill"></i> Sepet
+              </h2>
+
+              <ul id="cart-list" class="list-group my-3"></ul>
+              <div id="cart-empty-message" class="alert alert-secondary d-none">Sepetiniz boş, bir şeyler ekleyin.</div>
+
+              <div class="pt-2 border-top">
+                <div class="d-flex justify-content-between py-1"><span>Ara Toplam:</span><span id="subtotal">0.00 ₺</span></div>
+                <div class="d-flex justify-content-between py-1"><span>Teslimat Ücreti:</span><span id="delivery-fee">0.00 ₺</span></div>
+                <div class="d-flex justify-content-between py-2 border-top fw-bold fs-5">
+                  <span>Genel Toplam:</span><span id="total-amount" class="text-primary">0.00 ₺</span>
+                </div>
+              </div>
+
+              <button id="checkout-button" class="btn btn-warning w-100 mt-3 fw-bold" onclick="showCheckoutScreen()">Ödemeye Geç</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold text-primary">Ödeme ve Onay</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+
+          <div class="modal-body">
+            <div id="checkout-alert-area" class="mb-2"></div>
+
+            <div class="p-3 border rounded mb-3 bg-light-subtle">
+              <h3 class="h6 fw-bold mb-2">Teslimat Adresi</h3>
+              <div id="checkout-user-display" class="mb-2 small text-secondary"></div>
+              <label for="checkout-address" class="form-label">Teslimat Adresi (Düzenleyebilirsiniz):</label>
+              <input type="text" id="checkout-address" class="form-control" placeholder="Tam adresinizi girin"/>
+              <div class="form-text">Adres girilmesi zorunludur. Kayıtlı adresiniz yoksa yukarıdan kaydedebilir veya buraya yazabilirsiniz.</div>
+            </div>
+
+            <div class="card mb-3 shadow-sm">
+              <div class="card-body">
+                <h3 class="h6 fw-bold mb-2">Sipariş Özeti</h3>
+                <div class="small d-flex flex-column gap-1">
+                  <div class="d-flex justify-content-between"><span>Ara Toplam:</span><span id="checkout-subtotal">0.00 ₺</span></div>
+                  <div class="d-flex justify-content-between"><span>Teslimat:</span><span id="checkout-delivery">45.00 ₺</span></div>
+                  <div class="d-flex justify-content-between border-top pt-2 fw-bold fs-5">
+                    <span>Ödenecek Tutar:</span><span id="checkout-total-amount" class="text-primary">0.00 ₺</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <form id="payment-form" class="needs-validation" novalidate>
+              <h3 class="h6 fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card-2-front-fill"></i> Ödeme Bilgisi
+              </h3>
+
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label d-block">Ödeme Yöntemi</label>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="payMethod" id="pm1" value="card" checked required>
+                    <label class="form-check-label" for="pm1"><i class="bi bi-credit-card"></i> Kredi/Banka Kartı</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="payMethod" id="pm2" value="door">
+                    <label class="form-check-label" for="pm2"><i class="bi bi-cash-coin"></i> Kapıda Ödeme</label>
+                  </div>
+                </div>
+
+                <div id="card-fields" class="col-12">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label" for="fullName">Kart Üzerindeki İsim</label>
+                      <input id="fullName" name="fullName" type="text" class="form-control" placeholder="Ad Soyad" required />
+                      <div class="invalid-feedback">Lütfen kart üzerindeki adı girin.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label" for="cardNumber">Kart Numarası</label>
+                      <input id="cardNumber" name="cardNumber" inputmode="numeric" maxlength="19"
+                             class="form-control" placeholder="1111 2222 3333 4444" required
+                             pattern="^(\d{4}\s?){4}$" autocomplete="cc-number"/>
+                      <div class="invalid-feedback">Geçerli bir kart numarası girin (16 hane).</div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                      <label class="form-label" for="expMonth">Ay</label>
+                      <input id="expMonth" name="expMonth" type="number" min="1" max="12" class="form-control" placeholder="MM" required autocomplete="cc-exp-month/>
+                      <div class="invalid-feedback">1-12 arasında ay girin.</div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <label class="form-label" for="expYear">Yıl</label>
+                      <input id="expYear" name="expYear" type="number" min="2025" class="form-control" placeholder="YYYY" required autocomplete="cc-exp-year" />
+                      <div class="invalid-feedback">Geçerli bir yıl girin.</div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <label class="form-label" for="cvv">CVV</label>
+                      <input id="cvv" name="cvv" type="password" inputmode="numeric" maxlength="4" class="form-control" placeholder="***" required pattern="^\d{3,4}$"/>
+                      <div class="invalid-feedback">Geçerli CVV girin.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button id="btnSimPay" type="button" class="btn btn-success fw-bold">Siparişi Onayla ve Öde</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Vazgeç</button>
+          </div>
+        </div>
       </div>
     </div>
-  </main>
 
-  <script src="app.js"></script>
-</body>
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-3">
+          <div class="modal-body">
+            <i class="bi bi-check-circle-fill display-5 text-success mb-2"></i>
+            <h3 class="h5 fw-bold">Siparişiniz Alındı!</h3>
+            <p class="text-secondary mb-3">Siparişiniz hazırlanıyor. Gelişmeleri takip edebilirsiniz.</p>
+            <button type="button" class="btn btn-primary fw-bold" data-bs-dismiss="modal">Tamam</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="mainToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body"></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Kapat"></button>
+        </div>
+      </div>
+    </div>
+
+<div id="cookie-consent" class="cookie-consent bg-body border-top d-none" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="container py-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div class="d-flex align-items-start gap-2 me-2 small text-body-secondary">
+      <i class="bi bi-cookie text-warning fs-5 lh-1"></i>
+      <div>
+        <strong class="text-body">Çerez Bilgilendirmesi</strong><br/>
+        Bu site deneyiminizi iyileştirmek için çerezler kullanır.
+    </div>
+ <div class="btn-group">
+      <button id="cookie-reject" type="button" class="btn btn-outline-secondary btn-sm">Reddet</button>
+      <button id="cookie-accept" type="button" class="btn btn-primary btn-sm">Kabul Et</button>
+    </div>
+  </div>
+</div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
